@@ -1,3 +1,23 @@
+# Procedural Design
+## I.e. "everything else"
+### Background
+- Blurred Objects?
+- Solid color?
+
+### Objects
+- Enemies will be a large part of procedural generation
+- Non-hostile entities
+- Plant mass
+- Inert objects (rocks)?
+- Large enemies (invincible/boss?)
+
+### Other 
+- Jet streams/ currents
+
+### Sound
+- procedural music would be cool
+
+## Reference
 ![image alt text](https://openphoto.net/volumes/sizes/dd/8217/2.jpg)
 
 ![image alt text](https://www.verywellhealth.com/thmb/6skhHQcxkL4M5Z1oDouxfJPeY0I=/1418x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/HIV_large-569fde523df78cafda9eb0e7.jpg)
