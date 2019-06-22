@@ -21,8 +21,11 @@ function love.load()
   objects.ground.shape4 = love.physics.newRectangleShape(-w/2, 0, 50, h, 0) --make a rectangle with a width of 650 and a height of 50
   objects.ground.fixture4 = love.physics.newFixture(objects.ground.body, objects.ground.shape4); --attach shape to body
 
-  squish = Squish
-  squish:init(50,50,100,50)
+  squish = setmetatable({}, Squish)
+  squish2 = setmetatable({}, Squish)
+  squish:init(25,25,100)
+  squish2:init(175,175,70)
+  print("points", #squish:getPoints())
 
   camera = Camera(squish:getX(), squish:getY())
 
@@ -48,6 +51,7 @@ function love.draw()
   love.graphics.polygon("fill", objects.ground.body:getWorldPoints(objects.ground.shape4:getPoints())) -- draw a "filled in" polygon using the ground's coordinates
 
   squish:draw()
+  squish2:draw()
 
 	camera:detach()
 end

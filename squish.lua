@@ -1,18 +1,20 @@
 
 local Squish = {}
+Squish.__index = Squish
 
-function Squish:init(x,y,size,num) 
-  self.fidelity = num
+function Squish:init(x,y,size) 
+  num = size/2
   self.center = {}
   self.nodes = {}
   local body = love.physics.newBody(world, x, y, "dynamic")
   self.center.body = body
   self.center.shape = love.physics.newCircleShape(20)
   self.center.fixture = love.physics.newFixture(self.center.body, self.center.shape, 1)
+  self.nodeshape = love.physics.newCircleShape(10)
 
   last = false
-  for i=1,self.fidelity do 
-    local angle = (2*math.pi)/self.fidelity*i;
+  for i=1,num do 
+    local angle = (2*math.pi)/num*i;
     
     local posx = x+size*math.cos(angle);
     local posy = y+size*math.sin(angle);
@@ -22,10 +24,9 @@ function Squish:init(x,y,size,num)
     body:setAngularDamping(5000)
     body:setMass(1)
     self.nodes[i].body = body
-    self.nodes[i].shape = love.physics.newCircleShape(10)
-    local fixture = love.physics.newFixture(self.nodes[i].body, self.nodes[i].shape, 1)
-    fixture:setCategory(2)
-    fixture:setMask(2)
+    local fixture = love.physics.newFixture(self.nodes[i].body, self.nodeshape, 1)
+    -- fixture:setCategory(2)
+    -- fixture:setMask(2)
     self.nodes[i].fixture = fixture
     joint = love.physics.newDistanceJoint(self.nodes[i].body, self.center.body, posx, posy, posx, posy, true )
     joint:setDampingRatio(0.2)
@@ -45,13 +46,36 @@ function Squish:init(x,y,size,num)
   end
 end
 
+local lineThickness = 10
+function Squish:getPoints()
+  local points = {}
+  for i=1, #self.nodes do 
+    local padding = self.nodeshape:getRadius() - lineThickness/2
+    local distance = math.sqrt((self.center.body:getX() - self.nodes[i].body:getX())^2 + (self.center.body:getY() - self.nodes[i].body:getY())^2)
+    local normal = {x=-(self.center.body:getX() - self.nodes[i].body:getX())/distance, y=-(self.center.body:getY() - self.nodes[i].body:getY())/distance}
+    table.insert(points, self.nodes[i].body:getX() + normal.x*padding)
+    table.insert(points, self.nodes[i].body:getY() + normal.y*padding)
+  end
+  return points
+end
+
 function Squish:draw()
   love.graphics.setColor(0.76, 0.18, 0.55) --set the drawing color to red for the ball
   love.graphics.circle("fill", self.center.body:getX(), self.center.body:getY(), self.center.shape:getRadius())
-  love.graphics.setColor(0.76, 0.18, 0.05) --set the drawing color to red for the ball
-
+  
+  love.graphics.setLineStyle("smooth");
+  love.graphics.setLineJoin("miter");
+  love.graphics.setLineWidth(lineThickness);
+  local points = self:getPoints()
+  love.graphics.setColor(101/256, 222/256, 241/256, 0.46) --set the drawing color to red for the ball
+  love.graphics.polygon("fill", points);
+  love.graphics.setColor(101/256, 222/256, 241/256) --set the drawing color to red for the ball
+  love.graphics.polygon("line", points);
+  
+  love.graphics.setColor(0.76, 0.18, 0.05)
+  love.graphics.setLineWidth(1);
   for i=1, #self.nodes do 
-    love.graphics.circle("fill", self.nodes[i].body:getX(), self.nodes[i].body:getY(), self.nodes[i].shape:getRadius())
+    -- love.graphics.circle("line", self.nodes[i].body:getX(), self.nodes[i].body:getY(), self.nodeshape:getRadius())
   end
 end
 
