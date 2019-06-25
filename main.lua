@@ -1,14 +1,40 @@
 Camera = require "hump.camera"
-Squish = require "squish"
+Squish = require "squash"
 
+local squishies = {}
+
+function squishies:positions()
+  positions = {}
+  for i, s in ipairs(self) do
+    table.insert(positions, {s.body:getX(), s.body:getY()})
+  end
+  return positions
+end
+
+function squishies:radii()
+  radii = {}
+  for i, s in ipairs(self) do
+    table.insert(radii, s.radius)
+  end
+  return radii
+end
+
+
+
+
+w = 650
+h = 600
+
+function love.resize(dw, dh)
+  w = dw
+  h = dh 
+end
 
 function love.load()
-  love.physics.setMeter(64) --the height of a meter our worlds will be 64px
-  world = love.physics.newWorld(0, 0, false) --create a world for the bodies to exist in with horizontal gravity of 0 and vertical gravity of 9.81
+  love.window.setMode(w, h, {resizable = true})
+  world = love.physics.newWorld(0, 0, true) --create a world for the bodies to exist in with horizontal gravity of 0 and vertical gravity of 9.81
 
   objects = {} -- table to hold all our physical objects
-	w = 650
-	h = 600
   --let's create the ground
   objects.ground = {}
   objects.ground.body = love.physics.newBody(world, 0, 0) --remember, the shape (the rectangle we create next) anchors to the body from its center, so we have to move it to (650/2, 650-50/2)
@@ -21,37 +47,86 @@ function love.load()
   objects.ground.shape4 = love.physics.newRectangleShape(-w/2, 0, 50, h, 0) --make a rectangle with a width of 650 and a height of 50
   objects.ground.fixture4 = love.physics.newFixture(objects.ground.body, objects.ground.shape4); --attach shape to body
 
-  squish = setmetatable({}, Squish)
-  squish2 = setmetatable({}, Squish)
-  squish:init(25,25,100)
-  squish2:init(175,175,70)
-  print("points", #squish:getPoints())
-
-  camera = Camera(squish:getX(), squish:getY())
+  camera = Camera(0, 0)
+  table.insert(squishies, Squish.new(50, 50, 100))
 
 end
 
 
+local f = io.open("shader.glsl", "rb")
+io.input(f)
+local shader = love.graphics.newShader(io.read("*all"))
+
 function love.update(dt)
-  world:update(dt) --this puts the world into motion
+  world:update(dt)
+  if #squishies:positions() == 0 then return end
+  shader:send("positions", unpack(squishies:positions()))
+  shader:send("radii", unpack(squishies:radii()))
+  shader:send("objects", #squishies)
+  shader:send("cameraPosition", {camera:worldCoords(camera:position())})
+end
 
-  local dx,dy = squish:getX() - camera.x, squish:getY() - camera.y
-  camera:move(dx * dt, dy * dt)
+function drawWorld()
+  -- love.graphics.setColor(0.28, 0.63, 0.05) -- set the drawing color to green for the ground
+  -- love.graphics.polygon("fill", objects.ground.body:getWorldPoints(objects.ground.shape:getPoints())) -- draw a "filled in" polygon using the ground's coordinates
+  -- love.graphics.polygon("fill", objects.ground.body:getWorldPoints(objects.ground.shape2:getPoints())) -- draw a "filled in" polygon using the ground's coordinates
+  -- love.graphics.polygon("fill", objects.ground.body:getWorldPoints(objects.ground.shape3:getPoints())) -- draw a "filled in" polygon using the ground's coordinates
+  -- love.graphics.polygon("fill", objects.ground.body:getWorldPoints(objects.ground.shape4:getPoints())) -- draw a "filled in" polygon using the ground's coordinates
 
-  squish:update()
+  -- for i=1,#squishies do
+  --   squishies[i]:draw()
+  -- end
+  love.graphics.setShader(shader)
+  love.graphics.setColor(101/256, 222/256, 241/256, 0.5)
+  love.graphics.push()
+  love.graphics.translate(-w/2, -h/2) 
+  love.graphics.polygon("fill", 0,0,0, h, w, h, w, 0)
+  love.graphics.pop()
+  love.graphics.setShader()
+  love.graphics.setColor(1,0,0)
+end
+
+function drawUI()
 
 end
 
 function love.draw()
-	camera:attach()
-  love.graphics.setColor(0.28, 0.63, 0.05) -- set the drawing color to green for the ground
-  love.graphics.polygon("fill", objects.ground.body:getWorldPoints(objects.ground.shape:getPoints())) -- draw a "filled in" polygon using the ground's coordinates
-  love.graphics.polygon("fill", objects.ground.body:getWorldPoints(objects.ground.shape2:getPoints())) -- draw a "filled in" polygon using the ground's coordinates
-  love.graphics.polygon("fill", objects.ground.body:getWorldPoints(objects.ground.shape3:getPoints())) -- draw a "filled in" polygon using the ground's coordinates
-  love.graphics.polygon("fill", objects.ground.body:getWorldPoints(objects.ground.shape4:getPoints())) -- draw a "filled in" polygon using the ground's coordinates
+  camera:draw(drawWorld)
+  drawUI()
+end
 
-  squish:draw()
-  squish2:draw()
+local mouseJoint = nil
 
-	camera:detach()
+function love.mousepressed(mx,my,button) 
+  local x, y = camera:worldCoords(mx, my)
+  for i=1,#squishies do
+    local squish = squishies[i]
+    local dx, dy = squish.body:getPosition()
+    if button == 1 and squish.shape:testPoint(dx,dy,0,x,y) then
+      if mouseJoint then mouseJoint:destroy() end
+      squish.body:setType("dynamic")
+      mouseJoint = love.physics.newMouseJoint(squish.body, x, y)
+      -- mouseJoint:setFrequency(5)
+      -- mouseJoint:setDampingRatio(1)
+    end
+  end
+  
+  if button == 2 then
+    table.insert(squishies, Squish.new(x, y, 100))
+  end
+end
+
+function love.mousemoved(mx, my)
+  local x, y = camera:worldCoords(mx, my)
+  if mouseJoint then
+    mouseJoint:setTarget(x, y)
+  end
+end
+
+function love.mousereleased()
+  if mouseJoint then 
+    mouseJoint:getBodies():setType("static")
+    mouseJoint:destroy() 
+  end
+  mouseJoint = nil
 end
