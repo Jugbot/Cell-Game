@@ -112,7 +112,7 @@ function love.mousepressed(mx,my,button)
   end
   
   if button == 2 then
-    table.insert(squishies, Squish.new(x, y, 100))
+    table.insert(squishies, Squish.new(x, y, math.random( 20,100 )))
   end
 end
 
