@@ -1,5 +1,5 @@
 Camera = require "hump.camera"
-Squish = require "squash"
+Squish = require "cell"
 
 local squishies = {}
 
@@ -48,7 +48,7 @@ function love.load()
   objects.ground.fixture4 = love.physics.newFixture(objects.ground.body, objects.ground.shape4); --attach shape to body
 
   camera = Camera(0, 0)
-  table.insert(squishies, Squish.new(50, 50, 100))
+  -- table.insert(squishies, Squish.new(50, 50, 100))
 
 end
 
@@ -76,6 +76,10 @@ function drawWorld()
   -- for i=1,#squishies do
   --   squishies[i]:draw()
   -- end
+  love.graphics.setBackgroundColor(220/256.0, 226/256.0, 200/256.0)
+  for i=1, #squishies do
+    squishies[i]:draw()
+  end
   love.graphics.setShader(shader)
   love.graphics.setColor(101/256, 222/256, 241/256, 0.5)
   love.graphics.push()
