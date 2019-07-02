@@ -1,5 +1,14 @@
 Camera = require "hump.camera"
+Gamestate = require "hump.gamestate"
+Vector = require "hump.vector-light"
 Squish = require "cell"
+
+local menu = {}
+local game = {}
+local editor = {}
+
+shader = love.graphics.newShader(love.filesystem.read("shader.glsl"))
+
 
 local squishies = {}
 
@@ -18,9 +27,6 @@ function squishies:radii()
   end
   return radii
 end
-
-
-
 
 w = 650
 h = 600
@@ -48,16 +54,13 @@ function love.load()
   objects.ground.fixture4 = love.physics.newFixture(objects.ground.body, objects.ground.shape4); --attach shape to body
 
   camera = Camera(0, 0)
-  -- table.insert(squishies, Squish.new(50, 50, 100))
+
+  Gamestate.registerEvents()
+  Gamestate.switch(editor)
 
 end
 
-
-local f = io.open("shader.glsl", "rb")
-io.input(f)
-local shader = love.graphics.newShader(io.read("*all"))
-
-function love.update(dt)
+function editor:update(dt)
   world:update(dt)
   if #squishies:positions() == 0 then return end
   shader:send("positions", unpack(squishies:positions()))
@@ -94,7 +97,7 @@ function drawUI()
 
 end
 
-function love.draw()
+function editor:draw()
   camera:draw(drawWorld)
   drawUI()
 end
