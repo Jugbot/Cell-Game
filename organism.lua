@@ -9,7 +9,8 @@ function Organism.new()
   setmetatable(organism, Organism)
 
   organism.cells = {}
-  organism.imageData = love.image.newImageData(4096, 1, "rgba16f")
+  organism.cellsData = love.image.newImageData(4096, 1, "rgba16f")
+  organism.cellsDataImage = love.graphics.newImage(organism.cellsData)
 
   return organism
 end
@@ -18,21 +19,25 @@ function Organism:draw()
   for i=1, #self.cells do
     self.cells[i]:draw()
   end
+  self.cellsDataImage:replacePixels(self.cellsData)
+  shader:send("positionradii", self.cellsDataImage)
+  shader:send("objects", #self.cells)
+  shader:send("cameraPosition", {camera:worldCoords(camera:position())})
   love.graphics.setShader(shader)
   love.graphics.setColor(101/256, 222/256, 241/256, 0.5)
   love.graphics.push()
-  love.graphics.translate(-w/2, -h/2) 
-  love.graphics.polygon("fill", 0,0,0, h, w, h, w, 0)
+  love.graphics.translate(-screenWidth/2, -screenHeight/2) 
+  love.graphics.polygon("fill", 0,0,0, screenHeight, screenWidth, screenHeight, screenWidth, 0)
   love.graphics.pop()
   love.graphics.setShader()
 end
 
 function Organism:update()
-  if #squishies:positions() == 0 then return end
-  shader:send("positions", unpack(squishies:positions()))
-  shader:send("radii", unpack(squishies:radii()))
-  shader:send("objects", #squishies)
-  shader:send("cameraPosition", {camera:worldCoords(camera:position())})
+  for i=1, #self.cells do
+    local cell = self.cells[i]
+    cell:update()
+    self.cellsData:setPixel(i-1, 0, cell.body:getX(), cell.body:getY(), cell.radius, 0)
+  end
 end
 
 return Organism

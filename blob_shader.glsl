@@ -1,7 +1,8 @@
+#pragma language glsl3
 uniform int objects = 0;
-uniform vec2 positions[100];
-uniform float radii[100];
-// uniform Image positionradii;
+// uniform vec2 positions[100];
+// uniform float radii[100];
+uniform sampler2D positionradii;
 varying vec2 texPos;
 uniform vec2 cameraPosition;
 // from 0 (most blending) to 1 (no blending)
@@ -41,7 +42,8 @@ vec4 effect( vec4 color, Image tex, vec2 texture_coords, vec2 screen_coords ) {
 
   float cummin = 0;
   for (int i = 0; i < objects; i++) {
-    float dist = distance(positions[i], texPos) - radii[i];
+    vec4 data = texelFetch(positionradii, ivec2(i, 0), 0);
+    float dist = distance(data.xy, texPos) - data.z;
     cummin += exp2( -k1 * dist );
     if (closestobj == -1 || dist < mindist) {
       mindist = dist;
@@ -59,7 +61,8 @@ vec4 effect( vec4 color, Image tex, vec2 texture_coords, vec2 screen_coords ) {
   float cummin2 = 0;
   for (int j = 0; j < objects; j++) {
     if (j == closestobj) continue;
-    float dist = distance(positions[j], texPos) - radii[j];
+    vec4 data = texelFetch(positionradii, ivec2(j, 0), 0);
+    float dist = distance(data.xy, texPos) - data.z;
     cummin2 += exp2( -k2 * abs(dist-mindist));
   }
 

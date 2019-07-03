@@ -34,6 +34,10 @@ function Cell:draw()
   -- self:debug()
 end
 
+function Cell:update()
+
+end
+
 function Cell:debug()
   love.graphics.setColor(1,0,0)
   love.graphics.circle("line", self.body:getX(), self.body:getY(), self.shape:getRadius())
