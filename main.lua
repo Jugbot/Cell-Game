@@ -7,7 +7,7 @@ local menu = {}
 local game = {}
 local editor = {}
 
-shader = love.graphics.newShader(love.filesystem.read("shader.glsl"))
+shader = love.graphics.newShader(love.filesystem.read("blob_shader.glsl"))
 
 
 local squishies = {}
@@ -119,7 +119,7 @@ function love.mousepressed(mx,my,button)
   end
   
   if button == 2 then
-    table.insert(squishies, Squish.new(x, y, math.random( 20,100 )))
+    table.insert(squishies, Squish.new(x, y, math.random( 20,30 )))
   end
 end
 

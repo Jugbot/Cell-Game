@@ -9,6 +9,7 @@ function Organism.new()
   setmetatable(organism, Organism)
 
   organism.cells = {}
+  organism.imageData = love.image.newImageData(4096, 1, "rgba16f")
 
   return organism
 end
