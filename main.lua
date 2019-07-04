@@ -1,8 +1,9 @@
 Camera = require "hump.camera"
 Gamestate = require "hump.gamestate"
 Vector = require "hump.vector-light"
-Squish = require "cell"
-Organism = require "organism"
+Squish = require "objects/cell"
+Organism = require "objects/organism"
+require "util"
 
 local menu = {}
 local game = {}
@@ -69,7 +70,7 @@ function love.mousepressed(mx,my,button)
   end
   
   if button == 2 then
-    local r = math.random() * 50 + 20
+    local r = math.random(0, 3)
     table.insert(objects.player.cells, Squish.new(x, y, r))
   end
 end

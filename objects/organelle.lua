@@ -1,11 +1,12 @@
 local Organelle = {}
 Organelle.__index = Organelle
 
-function Organelle.new(x, y, radius)
+function Organelle.new(x, y, points)
   local organelle = {}
   setmetatable(organelle, Organelle)
 
-  organelle.radius = radius
+  organelle.points = points
+  organelle.radius = math.nthgratio(points + 4)
   organelle.body = love.physics.newBody(world, x, y, "dynamic")
   organelle.shape = love.physics.newCircleShape(organelle.radius)
   organelle.fixture = love.physics.newFixture(organelle.body, organelle.shape, 1)

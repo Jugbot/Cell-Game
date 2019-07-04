@@ -1,5 +1,5 @@
 
-local Cell = require "cell"
+local Cell = require "objects/cell"
 
 local Organism = {}
 Organism.__index = Organism

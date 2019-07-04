@@ -1,27 +1,28 @@
-local Organelle = require "organelle"
+local Organelle = require "objects/organelle"
 
 local Cell = {}
 Cell.__index = Cell
 
-function Cell.new(x, y, radius)
+function Cell.new(x, y, size)
   local cell = {}
   setmetatable(cell, Cell)
 
-  cell.radius = radius
+  cell.radius = math.nthgratio(size+6)
   cell.body = love.physics.newBody(world, x, y, "dynamic")
   cell.shape = love.physics.newCircleShape(cell.radius)
   cell.fixture = love.physics.newFixture(cell.body, cell.shape, 1)
   
   cell.organelles = {}
-  local i = 16
-  while i < radius/2 do
-    local r = math.random() * (radius - i * 2) + i
-    local rtheta = math.random() * 2 * math.pi
-    local x, y = math.sin(rtheta) * r + cell.body:getX(), math.cos(rtheta) * r + cell.body:getY()
+
+  for i=0, size do
+    -- local r = math.random() * cell.radius/2
+    -- local rtheta = math.random() * 2 * math.pi
+    -- local x, y = math.sin(rtheta) * r + cell.body:getX(), math.cos(rtheta) * r + cell.body:getY()
+    local x, y = cell.body:getX() + math.random(), cell.body:getY() + math.random()
     local o = Organelle.new(x, y, i)
-    love.physics.newDistanceJoint(o.body, cell.body, x, y, cell.body:getX(), cell.body:getY(), false)
+    local j = love.physics.newDistanceJoint(o.body, cell.body, x, y, cell.body:getX(), cell.body:getY(), false)
+    j:setLength(math.random() * (cell.radius - 2 * o.radius) + o.radius)
     cell.organelles[#cell.organelles + 1] = o
-    i = i * 1.5
   end
 
   return cell
