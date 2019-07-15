@@ -5,3 +5,19 @@ function math.nthgratio(itr, number)
   if itr == 0 then return number end
   return math.nthgratio(itr-1, number * math.gratio)
 end
+
+function table.clone(org)
+  return {unpack(org)}
+end
+
+function requiredir(dir)
+  local files = love.filesystem.getDirectoryItems(dir)
+  for i=1, #files do
+    local file = files[i]
+    local fullPath = dir .. '/' .. file
+    print("include "..fullPath)
+    if love.filesystem.getInfo(fullPath, "file") then
+      dofile(fullPath)
+    end
+  end
+end

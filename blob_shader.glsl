@@ -4,7 +4,6 @@ uniform int objects = 0;
 // uniform float radii[100];
 uniform sampler2D positionradii;
 varying vec2 texPos;
-uniform vec2 cameraPosition;
 // from 0 (most blending) to 1 (no blending)
 uniform float k1 = 0.05; // blob clump boundary smoothness
 uniform float k2 = 0.1; // blob wall smoothness
@@ -15,7 +14,7 @@ uniform float borderWidth = 6;
 #ifdef VERTEX
 vec4 position(mat4 transform_projection, vec4 vertex_position)
 {
-    texPos = (cameraPosition + vertex_position.xy);
+    texPos = vertex_position.xy - love_ScreenSize.xy/2;
     return transform_projection * vertex_position;
 }
 #endif
@@ -23,7 +22,7 @@ vec4 position(mat4 transform_projection, vec4 vertex_position)
 #ifdef PIXEL
 // cubic smooth min (for blending walls and boundaries)
 float smin( float a, float b, float k )
-{
+{ 
     float h = max( k-abs(a-b), 0.0 )/k;
     return min( a, b ) - h*h*h*k*(1.0/6.0);
 }
