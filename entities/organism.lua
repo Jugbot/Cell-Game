@@ -2,8 +2,8 @@ Organism = class "Organism"
 Organism.shader = love.graphics.newShader(love.filesystem.read("blob_shader.glsl"))
 
 function Organism:init()
-  self.cells = {}
   self.dirty = false -- Should check integrity and split if need be
+  self.cells = {}
   self.cellsData = love.image.newImageData(1024, 1, "rgba16f")
   self.cellsDataImage = love.graphics.newImage(self.cellsData)
   systemWorld:addEntity(self)
