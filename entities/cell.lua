@@ -30,6 +30,7 @@ function Cell:draw()
     love.graphics.setColor(101/256, 222/256, 241/256, 0.5)
     love.graphics.circle("fill", self.body:getX(), self.body:getY(), self.shape:getRadius())
     love.graphics.setColor(101/256, 222/256, 241/256, 1)
+    love.graphics.setLineWidth(6)
     love.graphics.circle("line", self.body:getX(), self.body:getY(), self.shape:getRadius())
   end
 end

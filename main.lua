@@ -8,8 +8,8 @@ requiredir "entities"
 requiredir "systems"
 requiredir "gamestate"
 
-
--- defining global worlds here for clarity
+-- These globals are changed depending on the 
+-- gamestate and represents the current worlds.
 physicsWorld = true
 systemWorld = true
 
