@@ -1,7 +1,7 @@
     
 DrawSystem = tiny.sortedProcessingSystem(class "DrawSystem")
 
-DrawSystem.drawService = true
+DrawSystem.drawSystem = true
 function DrawSystem:init(camera)
     self.camera = camera
     self.filter = tiny.requireAll("draw")
