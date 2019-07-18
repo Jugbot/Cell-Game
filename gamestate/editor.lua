@@ -9,14 +9,12 @@ function editor:init()
   physicsWorld = editorPhysicsWorld
   systemWorld = editorSystemWorld
   editorMenu = UIBox():setChildren("column",
-    UIBox(1/5):setChildren("row",
-      UIBox(1/5),
-      UIBox(1/5, 2/5):setChildren("column",
-        UIButton(1/2, 1/4, 100)
-      ),
-      UIBox(1/5, 4/5)
-    ),
-    UIBox(1/5, 4/5)
+    UIBox({size=1/5}),
+    UIBox({size=1/5, offset=4/5, max=200}):setChildren("column",
+      UIBox({size=1/5}):setChildren("row",
+        UIButton({size=1})
+      )
+    )
   )
   editorMenu:refresh()
 end
@@ -49,7 +47,7 @@ end
 
 function editor:draw()
   systemWorld:update(0, tiny.requireAny("drawSystem"))
-  if editorMenu ~= nil then editorMenu:drawUI() end
-  love.graphics.setColor(1,0.5,0.5)
+  editorMenu:drawUI()
+  love.graphics.setColor(1,1,1,1)
   love.graphics.print("FPS: "..tostring(love.timer.getFPS( )), 10, 10)
 end

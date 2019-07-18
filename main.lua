@@ -8,13 +8,14 @@ requiredir "entities"
 requiredir "systems"
 requiredir "gamestate"
 
+mainFont = love.graphics.newFont("assets/Delicious.ttf", 20)
 -- These globals are changed depending on the 
 -- gamestate and represents the current worlds.
 physicsWorld = true
 systemWorld = true
 
 function love.load()
+  love.graphics.setFont(mainFont)
   Gamestate.registerEvents()
   Gamestate.switch(editor)
 end
-

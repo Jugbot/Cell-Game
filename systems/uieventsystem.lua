@@ -13,7 +13,7 @@ function UIEventSystem:preWrap()
 end
 
 function UIEventSystem:testPoint(e)
-    return (e.x < self.mx and self.my < e.x + e.width) and
+    return (e.x < self.mx and self.mx < e.x + e.width) and
         (e.y < self.my and self.my < e.y + e.height)
 end
 

@@ -1,11 +1,11 @@
 require "entities.uibox"
 UIButton = UIBox:extend(class "UIButton")
 
-function UIButton:init(...)
-  self.super:init(...)
-  self.radius = 0
-  self.color = {101/256, 222/256, 241/256, 0.5}
-  self.colorPressed = {101/256, 222/256, 241/256, 1}
+function UIButton:init(args)
+  local args = args or {}
+  self.super.init(self, args)
+  self.radius = args.radius or 0
+  self.colorPressed = args.colorPressed or table.clone(self.color)
   self.isPressed = false
   systemWorld:addEntity(self)
 end
@@ -17,6 +17,9 @@ function UIButton:drawUI()
     love.graphics.setColor(unpack(self.color))
   end
   love.graphics.rectangle("fill", self.x, self.y, self.width, self.height, self.radius, self.radius)
+  for i=1, #self.children do
+    self.children[i]:drawUI()
+  end
 end
 
 function UIButton:mouseUp()

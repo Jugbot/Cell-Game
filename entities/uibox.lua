@@ -4,12 +4,13 @@ UIBox = class "UIBox"
 -- p_offset: offset in percent
 -- min: minimum size in pixels
 -- max: maximum size in pixels
-function UIBox:init(p, p_offset, min, max)
+function UIBox:init(args)
+  local args = args or {}
   self.flow = "row"
-  self.min, self.max = min, max
-  self.percent, self.percent_offset = p or 1, p_offset or 0
-  self.x, self.y, self.width, self.height = 0,0,love.graphics.getWidth(),love.graphics.getHeight()
-  self.color = {0,0,0,0.1}
+  self.min, self.max = args.min, args.max
+  self.size, self.offset = args.size or 1, args.offset or 0
+  self.x, self.y, self.width, self.height = 0,0,0,0
+  self.color = args.color or {0,0,0,0.1}
   self.parent = nil
   self.children = {}
   systemWorld:addEntity(self)
@@ -30,6 +31,14 @@ function UIBox:setChildren(flow, ...)
 end
 
 function UIBox:refresh()
+  local function correct(limit, cx, cw, sx, sw)
+    -- helper function for correcting by min or max (like justify space between flexbox css)
+    local diff = limit - cw
+    return cx - diff * ((cx + cw/2 - sx) / (sw)), limit
+  end
+  if self.parent == nil then
+    self.width, self.height = love.graphics.getWidth(), love.graphics.getHeight()
+  end
   self:setChildren(self.flow, unpack(self.children))
   local children = self.children
   for i=1, #children do
@@ -37,23 +46,25 @@ function UIBox:refresh()
     if self.flow == "column" then
       child.x = self.x 
       child.width = self.width
-      child.y = self.y + self.height * child.percent_offset
-      child.height = self.height * child.percent
+      child.y = self.y + self.height * child.offset
+      child.height = self.height * child.size
+      if child.min ~= nil and child.min > child.height then 
+        child.y, child.height = correct(child.min, child.y, child.height, self.y, self.height)
+      end
+      if child.max ~= nil and child.max < child.height then
+        child.y, child.height = correct(child.max, child.y, child.height, self.y, self.height)
+      end
     else -- == "row"
-      child.x = self.x + self.width * child.percent_offset
-      child.width = self.width * child.percent
+      child.x = self.x + self.width * child.offset
+      child.width = self.width * child.size
       child.y = self.y 
       child.height = self.height
-      -- local diff = 0
-      -- if child.min ~= nil and child.min > child.width then 
-      --   diff = child.min - child.width
-      --   child.width = child.min
-      -- end
-      -- if child.max ~= nil and child.max < child.width then
-      --   diff = child.max - child.width
-      --   child.width = child.max
-      -- end
-      -- child.x = child.x + diff/2-- * ((child.x - self.x) / (self.width - child.width))
+      if child.min ~= nil and child.min > child.width then 
+        child.x, child.width = correct(child.min, child.x, child.width, self.x, self.width)
+      end
+      if child.max ~= nil and child.max < child.width then
+        child.x, child.width = correct(child.max, child.x, child.width, self.x, self.width)
+      end
     end
     self.children[i]:refresh()
   end
