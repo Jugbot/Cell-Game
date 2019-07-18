@@ -14,10 +14,11 @@ function requiredir(dir)
   local files = love.filesystem.getDirectoryItems(dir)
   for i=1, #files do
     local file = files[i]
-    local fullPath = dir .. '/' .. file
-    print("include "..fullPath)
-    if love.filesystem.getInfo(fullPath, "file") then
-      dofile(fullPath)
+    local name = file:gmatch('[^%.]+')()
+    local fullPath = dir .. '.' .. name
+    -- print("include "..fullPath)
+    if love.filesystem.getInfo(dir..'/'..file, "file") then
+      require(fullPath)
     end
   end
 end
