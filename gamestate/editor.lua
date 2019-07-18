@@ -11,8 +11,10 @@ function editor:init()
   editorMenu = UIBox():setChildren("column",
     UIBox({size=1/5}),
     UIBox({size=1/5, offset=4/5, max=200}):setChildren("column",
-      UIBox({size=1/5}):setChildren("row",
-        UIButton({size=1})
+      UIBox({size=3/5}):setChildren("row",
+        UIButton({size=1/7, colorPressed={0,1,0,1}}):setChildren("row",
+          UIText({text="Hello", color={1,1,1,1}})
+        )
       )
     )
   )
