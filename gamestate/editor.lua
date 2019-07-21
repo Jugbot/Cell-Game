@@ -2,7 +2,7 @@ editor = {}
 local camera = Camera(70, 30)
 local editorPhysicsWorld = love.physics.newWorld(0, 0, false)
 local editorSystemWorld = tiny.world(
-  DrawSystem(camera), UpdateSystem(), MouseDragSystem(camera), UIEventSystem())
+  DrawSystem(camera), UpdateSystem(), MouseDragSystem(camera))
 local editorGUI = true
 
 function editor:init()
