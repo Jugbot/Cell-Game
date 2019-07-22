@@ -1,20 +1,26 @@
 EditorGUI = class "EditorGUI"
 
 function EditorGUI:init()
+  self.selected = nil
   local Layout = require 'lib.luigi.layout'
   local Widget = require 'lib.luigi.widget'
   local layout = Layout(require 'gui.layout.itemlayout' )
 
   local data = {
     {
-      name="Category Uno",
-      "Cell 1",
-      "Cell 2",
-      "Cell 3"
+      name="Essentials",
+      "Small Cell",
+      "Medium Cell",
+      "Large Cell"
     },
     {
-      name="Category Dos",
-      "Thing 1"
+      name="Offense"
+    },
+    {
+      name="Defense"
+    },
+    {
+      name="Utility"
     }
   }
 
@@ -26,7 +32,11 @@ function EditorGUI:init()
       layout.contents:addChild(content)
     end)
     for i=1, #v do
-      content:addChild({ type = 'button', width = 90, height = 90, text = v[i]})
+      local spawntype = content:addChild({ type = 'button', width = 90, height = 90, text = v[i]})
+      local idname = v[i]:gsub("%s+", "_"):lower()
+      spawntype:onPress(function (e)
+        self.selected = idname
+      end)
     end
     if not layout.contents[1] then
       layout.contents:addChild(content)

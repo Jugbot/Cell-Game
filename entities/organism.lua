@@ -28,46 +28,36 @@ function Organism:draw()
   love.graphics.setShader()
 end
 
-function dfs(currentBody, outArray)
+local function dfs(currentBody, visited)
   if currentBody:isDestroyed() then return end
   local owner = currentBody:getUserData()
-  if owner.visited then return end
-  owner.visited = true
-  table.insert(outArray, owner)
+  if visited[owner] then return end 
+  visited[owner] = true
   local joints = currentBody:getJoints()
   for j=1, #joints do
     if not joints[j]:isDestroyed() and joints[j]:getUserData() == self then
       local b1, b2 = joints[j]:getBodies()
-      dfs(b1, outArray)
-      dfs(b2, outArray)
+      dfs(b1, visited)
+      dfs(b2, visited)
     end
   end
 end
 
 function Organism:update()
-  if self.dirty then
+  if self.dirty and self.cellsCount > 0 then
     print("integrity check")
-    local allCells = table.clone(self.cells) --shallow copy
-    self.cells = {}
     -- if self.core then 
     --   local currentBody = self.core.body
     --   self.core.visited = true
     --   dfs(currentBody, self.cells)
     -- end
-    for i=1, #allCells do
-      if not allCells[i].visited then
-        local newGroup = {}
-        dfs(allCells[i].body, newGroup)
-        if #self.cells == 0 then 
-          self.cells = newGroup
-        else
-          local o = Organism()
-          o.cells = newGroup
-        end
+    local visited = {}
+    local cells = self.cells
+    dfs(next(cells).body, visited)
+    for cell, _ in pairs(cells) do
+      if not visited[cell] then
+        self:detachCell(cell)
       end
-    end
-    for i=1, #allCells do
-      allCells[i].visited = false
     end
     self.dirty = false
   end
@@ -84,6 +74,7 @@ function Organism:_removeCell(cell)
   self.cells[cell] = nil
   self.cellsCount = self.cellsCount - 1
   cell.parent = nil
+  self.dirty = true
   print('detach', self.cellsCount)
 end
 
