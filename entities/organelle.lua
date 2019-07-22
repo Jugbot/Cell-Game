@@ -7,7 +7,7 @@ function Organelle:init(x, y, points)
   self.shape = love.physics.newCircleShape(self.radius)
   self.fixture = love.physics.newFixture(self.body, self.shape, 1)
   self.fixture:setCategory()
-  self.color = {101/256, 222/256, 241/256}
+  self.color = {0.733, 0.553, 0.969}
   systemWorld:addEntity(self)
 end
 

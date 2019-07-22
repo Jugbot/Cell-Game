@@ -8,6 +8,7 @@ require "util"
 requiredir "entities"
 requiredir "systems"
 requiredir "gamestate"
+requiredir "events"
 
 mainFont = love.graphics.newFont("assets/Delicious.ttf", 20)
 -- These globals are changed depending on the 

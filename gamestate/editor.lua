@@ -2,7 +2,7 @@ editor = {}
 local camera = Camera(70, 30)
 local editorPhysicsWorld = love.physics.newWorld(0, 0, false)
 local editorSystemWorld = tiny.world(
-  DrawSystem(camera), UpdateSystem(), MouseDragSystem(camera))
+  DrawSystem(camera), UpdateSystem())
 local editorGUI = true
 
 function editor:init()
@@ -19,13 +19,12 @@ function editor:enter()
   editorGUI.layout:show()
   -- Temporary things to play with
   local organism = Organism()
-  local cell = Cell(0, 0, 2)
-  cell.body:setType("static")
-  cell.parent = organism
-  organism:attachCell(Cell(0, 0, 1))
-  table.insert(organism.cells, cell)
   local player = Player(organism)
+  Cell(0, 0, 2)
+  Cell(0, 0, 1)
   Cell(0, 0, 0)
+  systemWorld:addSystem(BuildableSystem(player))
+  EditorEventHandler(self, camera)
 end
 
 function editor:update(dt)
