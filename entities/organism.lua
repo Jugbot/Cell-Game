@@ -28,41 +28,6 @@ function Organism:draw()
   love.graphics.setShader()
 end
 
-local function dfs(currentBody, visited)
-  if currentBody:isDestroyed() then return end
-  local owner = currentBody:getUserData()
-  if visited[owner] then return end 
-  visited[owner] = true
-  local joints = currentBody:getJoints()
-  for j=1, #joints do
-    if not joints[j]:isDestroyed() and joints[j]:getUserData() == self then
-      local b1, b2 = joints[j]:getBodies()
-      dfs(b1, visited)
-      dfs(b2, visited)
-    end
-  end
-end
-
-function Organism:update()
-  if self.dirty and self.cellsCount > 0 then
-    print("integrity check")
-    -- if self.core then 
-    --   local currentBody = self.core.body
-    --   self.core.visited = true
-    --   dfs(currentBody, self.cells)
-    -- end
-    local visited = {}
-    local cells = self.cells
-    dfs(next(cells).body, visited)
-    for cell, _ in pairs(cells) do
-      if not visited[cell] then
-        self:detachCell(cell)
-      end
-    end
-    self.dirty = false
-  end
-end
-
 function Organism:_addCell(cell)
   self.cells[cell] = true
   self.cellsCount = self.cellsCount + 1

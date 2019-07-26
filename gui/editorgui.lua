@@ -1,10 +1,10 @@
 EditorGUI = class "EditorGUI"
 
 function EditorGUI:init()
-  self.selected = nil
   local Layout = require 'lib.luigi.layout'
   local Widget = require 'lib.luigi.widget'
   local layout = Layout(require 'gui.layout.itemlayout' )
+  self.itemPressCallback = function()end
 
   local data = {
     {
@@ -34,8 +34,8 @@ function EditorGUI:init()
     for i=1, #v do
       local spawntype = content:addChild({ type = 'button', width = 90, height = 90, text = v[i]})
       local idname = v[i]:gsub("%s+", "_"):lower()
-      spawntype:onPress(function (e)
-        self.selected = idname
+      spawntype:onPressStart(function (e)
+        self.itemPressCallback(idname)
       end)
     end
     if not layout.contents[1] then

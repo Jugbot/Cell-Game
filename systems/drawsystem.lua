@@ -1,14 +1,12 @@
     
 DrawSystem = tiny.sortedProcessingSystem(class "DrawSystem")
 
-DrawSystem.drawSystem = true
-function DrawSystem:init(camera)
-    self.camera = camera
+function DrawSystem:init()
     self.filter = tiny.requireAll("draw")
 end
 
 function DrawSystem:preProcess(dt)
-    self.camera:attach()
+    camera:attach()
 end
 
 function DrawSystem:process(e, dt)
@@ -16,7 +14,7 @@ function DrawSystem:process(e, dt)
 end
 
 function DrawSystem:postProcess(dt)
-    self.camera:detach()
+    camera:detach()
     love.graphics.setColor(255, 255, 255, 255)
 end
 

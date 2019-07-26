@@ -1,11 +1,16 @@
 AttachSystem = tiny.processingSystem(class "AttachSystem")
 
 function AttachSystem:init()
-  self.filter = tiny.requireAll("grabbed", "attach")
+  self.filter = tiny.requireAll("grabbed", "slot")
+  self.snapDistance = 10
 end
 
 function AttachSystem:process(e, dt)
-  if not grabbed then
-    e:attach()
+  if e.grabbed then
+    local x, y = e.body:getPosition()
+    local d = self.snapDistance
+    physicsWorld:queryBoundingBox(x-d, y-d, x+d, y+d, function(fixture)
+      
+    end)
   end
 end

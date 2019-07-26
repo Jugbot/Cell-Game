@@ -100,6 +100,7 @@ local class = {
 _class = function(name, attr)
 	local c = deep_copy(attr)
 	_classes[c] = tostring(c)
+	c[name] = true -- For easier use with tiny filters
 	c.name = name or c.name
 	c.__tostring = baseMt.__tostring
 	c.__call = baseMt.__call
@@ -172,7 +173,8 @@ _class = function(name, attr)
 		for _, mixin in ipairs({...}) do
 			assert(self.mixins[mixin] ~= true, ('Attempted to include a mixin which was already included in %s'):format(tostring(self)))
 			self.mixins[mixin] = true
-			deep_copy(mixin, self, 'function')
+			-- deep_copy(mixin, self, 'function')
+			deep_copy(mixin, self) -- Use mixins to extend properties as well
 		end
 		return self
 	end

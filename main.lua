@@ -5,12 +5,14 @@ class = require "lib.30log"
 tiny = require "lib.tiny"
 require "gui.editorgui"
 require "util"
+requiredir "components"
 requiredir "entities"
 requiredir "systems"
 requiredir "gamestate"
 requiredir "events"
 
 mainFont = love.graphics.newFont("assets/Delicious.ttf", 20)
+camera = Camera(70, 30)
 -- These globals are changed depending on the 
 -- gamestate and represents the current worlds.
 physicsWorld = true

@@ -1,4 +1,5 @@
 Cell = class "Cell"
+Cell:with(MouseComponent)
 
 function Cell:init(x, y, size)
   self.color = {0.588, 0.737, 0.761}
@@ -8,8 +9,11 @@ function Cell:init(x, y, size)
   self.shape = love.physics.newCircleShape(self.radius)
   self.fixture = love.physics.newFixture(self.body, self.shape, 1)
   self.fixture:setUserData(self)
-  self.grabbed = false
   self.parent = nil
+  self.slots = {
+    primary=self.body,
+    secondary={}
+  }
   
   self.organelles = {}
 
@@ -38,11 +42,7 @@ function Cell:draw()
   end
 end
 
-function Cell:update()
-
-end
-
--- Removes unowned joints (ie: cell-cell joints)
+-- Removes joints owned by parent (ie: cell-cell joints)
 function Cell:_detachParent()
   for _, j in ipairs(self.body:getJoints()) do
     if j:getUserData() == self.parent then j:destroy() end
