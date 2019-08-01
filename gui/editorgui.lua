@@ -9,6 +9,7 @@ function EditorGUI:init()
   local data = {
     {
       name="Essentials",
+      "Core",
       "Small Cell",
       "Medium Cell",
       "Large Cell"

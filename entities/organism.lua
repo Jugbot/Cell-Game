@@ -54,7 +54,7 @@ function Organism:attachCell(cell)
   for other, _ in pairs(cells) do
     local dist = love.physics.getDistance(other.fixture, cell.fixture)
     local b1, b2 = other.body, cell.body
-    if dist < 5 and b1 ~= b2 then
+    if dist < 5 and dist >= 0 and b1 ~= b2 then
       local j = love.physics.newDistanceJoint(b1, b2, b1:getX(), b1:getY(), b2:getX(), b2:getY(), false)
       j:setUserData(self)
       success = true

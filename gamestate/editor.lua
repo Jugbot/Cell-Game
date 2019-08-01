@@ -7,7 +7,7 @@ local editorEvents
 
 function editor:init()
   editorPhysicsWorld = love.physics.newWorld(0, 0, false)
-  editorSystemWorld = tiny.world(DrawSystem(camera), IntegritySystem(), MouseJointSystem(), ItemDropSystem())
+  editorSystemWorld = tiny.world(DrawSystem(camera), IntegritySystem(), MouseJointSystem(), ItemDropSystem(), ItemSnapSystem())
   physicsWorld = editorPhysicsWorld
   systemWorld = editorSystemWorld
   editorGUI = EditorGUI()
@@ -21,6 +21,7 @@ function editor:init()
   systemWorld:addSystem(CellBuildSystem(player))
   mouse = Mouse()
   systemWorld:addSystem(ItemDragSystem(mouse))
+  systemWorld:addSystem(DrawSlotSystem(mouse))
 end
 
 function editor:enter()
@@ -33,11 +34,11 @@ end
 
 function editor:update(dt)
   physicsWorld:update(dt)
-  systemWorld:update(dt, tiny.rejectAny("DrawSystem"))
+  systemWorld:update(dt, tiny.rejectAny("DrawSystem", "DrawSlotSystem"))
 end
 
 function editor:draw()
-  systemWorld:update(0, tiny.requireAny("DrawSystem"))
+  systemWorld:update(0, tiny.requireAny("DrawSystem", "DrawSlotSystem"))
   love.graphics.setColor(1,1,1,1)
   love.graphics.print("FPS: "..tostring(love.timer.getFPS( )), 10, 10)
 end
@@ -48,7 +49,7 @@ function getObjUnderMouse(mx, my)
   physicsWorld:queryBoundingBox( x, y, x, y, function (fixture)
     newobj = fixture:getUserData()
     if newobj and fixture:testPoint(x,y) then
-      if index == nil or (obj.drawLayer ~= nil and index < obj.drawLayer) and obj.mouseevent then 
+      if (newobj.drawLayer == nil or index == nil or index < newobj.drawLayer) and newobj.mouseevent then 
         obj = newobj
         index = obj.drawLayer
       end
@@ -87,5 +88,9 @@ function editor:itemselect(id)
     local cell = Cell(x, y, 2)
     cell.mouseevent.mousepressed = {x, y, 1}
     cell.body:setType("static")
+  elseif id == "core" then
+    local core = Core(x, y)
+    core.mouseevent.mousepressed = {x, y, 1}
+    core.body:setType("static")
   end
 end

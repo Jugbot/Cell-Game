@@ -9,7 +9,7 @@ uniform float k1 = 0.05; // blob clump boundary smoothness
 uniform float k2 = 0.1; // blob wall smoothness
 // higher = more blending
 uniform float k3 = 30; // blob wall-boundary blending
-uniform float borderWidth = 6;
+uniform float borderWidth = 8;
 
 #ifdef VERTEX
 vec4 position(mat4 transform_projection, vec4 vertex_position)

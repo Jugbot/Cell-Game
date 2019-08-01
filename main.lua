@@ -1,6 +1,6 @@
 Camera = require "lib.camera"
 Gamestate = require "lib.gamestate"
-Vector = require "lib.vector-light"
+vector = require "lib.vector-light"
 class = require "lib.30log"
 tiny = require "lib.tiny"
 require "gui.editorgui"
