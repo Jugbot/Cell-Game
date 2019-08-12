@@ -4,6 +4,7 @@ DrawSlotSystem = tiny.processingSystem(class "DrawSlotSystem")
 function DrawSlotSystem:init(mouse)
     self.filter = tiny.requireAll("Slot")
     self.mouse = mouse
+    self.active = false -- manual update
 end
 
 function DrawSlotSystem:preProcess(dt)

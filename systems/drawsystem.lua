@@ -3,6 +3,7 @@ DrawSystem = tiny.sortedProcessingSystem(class "DrawSystem")
 
 function DrawSystem:init()
     self.filter = tiny.requireAll("draw")
+    self.active = false -- manual update
 end
 
 function DrawSystem:preProcess(dt)

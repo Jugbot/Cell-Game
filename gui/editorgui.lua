@@ -3,7 +3,10 @@ EditorGUI = class "EditorGUI"
 function EditorGUI:init()
   local Layout = require 'lib.luigi.layout'
   local Widget = require 'lib.luigi.widget'
-  local layout = Layout(require 'gui.layout.itemlayout' )
+  local layout = require 'gui.layout.itemlayout'
+  local menu = require 'gui.layout.menulayout'
+  layout:setTheme(require "lib.luigi.theme.dark")
+  menu:setMaster(layout)
   self.itemPressCallback = function()end
 
   local data = {
@@ -43,6 +46,9 @@ function EditorGUI:init()
       layout.contents:addChild(content)
     end
   end
+  layout.menu:onPress(function (e)
+    menu:show()
+  end)
   self.layout = layout
   systemWorld:addEntity(self)
 end
