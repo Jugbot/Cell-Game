@@ -3,20 +3,10 @@ DrawSystem = tiny.sortedProcessingSystem(class "DrawSystem")
 
 function DrawSystem:init()
     self.filter = tiny.requireAll("draw")
-    self.active = false -- manual update
-end
-
-function DrawSystem:preProcess(dt)
-    camera:attach()
 end
 
 function DrawSystem:process(e, dt)
     e:draw()
-end
-
-function DrawSystem:postProcess(dt)
-    camera:detach()
-    love.graphics.setColor(255, 255, 255, 255)
 end
 
 function DrawSystem:compare(e1, e2)

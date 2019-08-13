@@ -39,12 +39,13 @@ end
 
 function editor:update(dt)
   physicsWorld:update(dt)
-  systemWorld:update(dt)
+  systemWorld:update(dt, tiny.rejectAll('DrawSystem'))
 end
 
 function editor:draw()
-  editorSystems.drawSystem:update()
-  editorSystems.drawSlotSystem:update()
+  camera:attach()
+  systemWorld:update(dt, tiny.requireAll('DrawSystem'))
+  camera:detach()
   love.graphics.setColor(1,1,1,1)
   love.graphics.print("FPS: "..tostring(love.timer.getFPS( )), 10, 10)
 end

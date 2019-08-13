@@ -1,14 +1,10 @@
     
 DrawSlotSystem = tiny.processingSystem(class "DrawSlotSystem")
+DrawSlotSystem.DrawSystem = true
 
 function DrawSlotSystem:init(mouse)
     self.filter = tiny.requireAll("Slot")
     self.mouse = mouse
-    self.active = false -- manual update
-end
-
-function DrawSlotSystem:preProcess(dt)
-    camera:attach()
 end
 
 function DrawSlotSystem:process(e, dt)
@@ -19,9 +15,4 @@ function DrawSlotSystem:process(e, dt)
     local r = e.radius
     love.graphics.circle("fill", x, y, r)
   end
-end
-
-function DrawSlotSystem:postProcess(dt)
-    camera:detach()
-    love.graphics.setColor(255, 255, 255, 255)
 end
