@@ -21,14 +21,15 @@ end
 function IntegritySystem:process(e, dt)
     if e.dirty and e.cellsCount > 0 then
         print("integrity check")
+        local cells = e.cells
         -- if e.core then 
         --   local currentBody = e.core.body
         --   e.core.visited = true
         --   dfs(currentBody, e.cells)
         -- end
+        local first = next(cells).body
         local visited = {}
-        local cells = e.cells
-        dfs(next(cells).body, visited)
+        dfs(first, visited)
         for cell, _ in pairs(cells) do
         if not visited[cell] then
             e:detachCell(cell)

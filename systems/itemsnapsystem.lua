@@ -23,7 +23,6 @@ end
 function ItemSnapSystem:process(e, dt)
   if e.attached and e.attached.plug then
     local x, y = camera:worldCoords(love.mouse.getPosition())
-    local r = self.snapDistance
     local item = e.attached
     local cells = self:_getCellsNearMouse()
 
@@ -33,7 +32,7 @@ function ItemSnapSystem:process(e, dt)
       for slot, _ in pairs(cell.slots) do
         local x2, y2 = slot:getPosition()
         local dist = vector.dist2(x,y,x2,y2)
-        if dist < slot.radius * slot.radius and (closest == false or dist < closest) and item.plug.size <= slot.size and item.plug.type == slot.type then
+        if dist < slot.radius * slot.radius and (closest == false or dist < closest) and slot:canFit(item) then
           chosen = slot 
           closest = dist
         end

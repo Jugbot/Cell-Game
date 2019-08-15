@@ -16,3 +16,11 @@ function Slot:getPosition()
   return self.cell.body:getWorldPoint(self.localX, self.localY)
 end
 
+function Slot:canFit(item)
+  return item.plug and item.plug.size <= self.size and item.plug.type == self.type
+end
+
+function Slot:attach(item)
+  assert(self:canFit(item), "Tried to fit invalid item to slot")
+  
+end
