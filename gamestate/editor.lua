@@ -56,7 +56,7 @@ function getObjUnderMouse(mx, my)
   physicsWorld:queryBoundingBox( x, y, x, y, function (fixture)
     newobj = fixture:getUserData()
     if newobj and fixture:testPoint(x,y) then
-      if (newobj.drawLayer == nil or index == nil or index < newobj.drawLayer) and newobj.mouseevent then 
+      if (newobj.drawLayer == nil or index == nil or index < newobj.drawLayer) and newobj.events then 
         obj = newobj
         index = obj.drawLayer
       end
@@ -69,14 +69,14 @@ end
 function editor:mousepressed(mx, my, ...)
   local obj = getObjUnderMouse(mx, my)
   if obj then
-    obj.mouseevent.mousepressed = {mx, my, ...}
+    obj.events.mousepressed = {mx, my, ...}
   end
 end
 
 function editor:mousereleased(mx, my, ...)
   local obj = getObjUnderMouse(mx, my)
   if obj then
-    obj.mouseevent.mousereleased = {mx, my, ...}
+    obj.events.mousereleased = {mx, my, ...}
   end
 end
 
@@ -85,19 +85,19 @@ function editor:itemselect(id)
   local x, y = camera:worldCoords(love.mouse.getPosition())
   if id == "small_cell" then
     local cell = Cell(x, y, 0)
-    cell.mouseevent.mousepressed = {x, y, 1}
+    cell.events.mousepressed = {x, y, 1}
     cell.body:setType("static")
   elseif id == "medium_cell" then
     local cell = Cell(x, y, 1)
-    cell.mouseevent.mousepressed = {x, y, 1}
+    cell.events.mousepressed = {x, y, 1}
     cell.body:setType("static")
   elseif id == "large_cell" then
     local cell = Cell(x, y, 2)
-    cell.mouseevent.mousepressed = {x, y, 1}
+    cell.events.mousepressed = {x, y, 1}
     cell.body:setType("static")
   elseif id == "core" then
     local core = Core(x, y)
-    core.mouseevent.mousepressed = {x, y, 1}
+    core.events.mousepressed = {x, y, 1}
     core.body:setType("static")
   end
 end

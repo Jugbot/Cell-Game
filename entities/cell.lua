@@ -1,5 +1,4 @@
 Cell = class "Cell"
-Cell:with(MouseComponent)
 
 function Cell:init(x, y, size)
   self.color = {0.588, 0.737, 0.761}
@@ -15,6 +14,8 @@ function Cell:init(x, y, size)
   self:_addSlots()
   self.organelles = {}
   self:_addOrganelles()
+  -- subscribe to systems which require these events
+  self.events = { mousepressed=false, grabbed=false }
 
   systemWorld:addEntity(self)
 end

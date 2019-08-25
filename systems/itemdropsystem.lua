@@ -9,7 +9,7 @@ end
 function ItemDropSystem:process(e, dt)
   if e.attached then
     if not love.mouse.isDown(1) then
-      e.attached.mouseevent.grabbed = false
+      e.attached.events.grabbed = false
       e.attached.body:setType("static")
       e:detach()
     end
