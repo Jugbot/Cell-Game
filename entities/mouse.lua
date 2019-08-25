@@ -14,7 +14,6 @@ function Mouse:attach(body)
 end
 
 function Mouse:detach()
-  print("detach")
   if self.mousejoint then self.mousejoint:destroy() end
   self.mousejoint = nil
   self.attached = nil

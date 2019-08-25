@@ -9,6 +9,8 @@ function Slot:init(cell, x, y, size, type)
   self.color = {0,0,0,0.1}
   self.cell = cell
   self.organism = cell.parent
+  self.item = nil
+  self.joint = nil
   systemWorld:addEntity(self)
 end
 
@@ -22,5 +24,17 @@ end
 
 function Slot:attach(item)
   assert(self:canFit(item), "Tried to fit invalid item to slot")
-  
+  if joint then return end
+  local x, y = self:getPosition()
+  self.joint = love.physics.newDistanceJoint(self.cell.body, item.body, x, y, 0, 0, false)
+  self.joint:setUserData(self)
+  self.item = item
+  item.parent = self
+end
+
+function Slot:detach()
+  self.joint:destroy()
+  self.joint = nil
+  self.item:_detachParent()
+  self.item = nil
 end

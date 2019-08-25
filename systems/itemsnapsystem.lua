@@ -40,10 +40,14 @@ function ItemSnapSystem:process(e, dt)
     end
 
     if chosen ~= false then
-      item.body:setType("static")
+      chosen:attach(item)
+      -- item.body:setType("static")
       item.body:setPosition(chosen:getPosition())
     else
-      item.body:setType("dynamic")
+      if item.parent then
+        item.parent:detach()
+      end
+      -- item.body:setType("dynamic")
     end
   end
 end

@@ -3,6 +3,7 @@ IntegritySystem = tiny.processingSystem(class "IntegritySystem")
 function IntegritySystem:init()
   self.filter = tiny.requireAll("Organism")
 end
+
 local function dfs(currentBody, visited)
     if currentBody:isDestroyed() then return end
     local owner = currentBody:getUserData()

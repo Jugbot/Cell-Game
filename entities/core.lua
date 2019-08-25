@@ -1,7 +1,10 @@
-Core = class "Core"
-Core:with(MouseComponent)
+
+-- Core:with(MouseComponent)
+require "entities.item"
+Core = Item:extend("Core")
 
 function Core:init(x, y)
+  self.super.init(self, 0, "primary")
   self.radius = math.nthgratio(5)
   self.body = love.physics.newBody(physicsWorld, x, y, "dynamic")
   self.body:setUserData(self)
@@ -11,8 +14,8 @@ function Core:init(x, y)
   self.fixture:setSensor(true)
   self.color = {0.835, 0.69, 0.675}
   self.colorBorder = {0.561, 0.443, 0.447}
-  self.plug = {size=0, type="primary"}
-  self.grabbed = false
+  -- self.plug = {size=0, type="primary"}
+  -- self.parent = nil
   systemWorld:addEntity(self)
 end
 

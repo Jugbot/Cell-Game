@@ -36,6 +36,7 @@ function Organism:_addCell(cell)
 end
 
 function Organism:_removeCell(cell)
+  cell:_detachParent()
   self.cells[cell] = nil
   self.cellsCount = self.cellsCount - 1
   cell.parent = nil
@@ -68,8 +69,6 @@ end
 
 function Organism:detachCell(cell)
   assert(cell:instanceOf(Cell), "tried to detach non-cell from organism!")
-  if self.cells[cell] then
-    cell:_detachParent()
-    self:_removeCell(cell)
-  end
+  assert(self.cells[cell], "Tried to detach unowned cell!")
+  self:_removeCell(cell)
 end
