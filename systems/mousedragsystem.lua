@@ -1,20 +1,20 @@
-ItemDragSystem = tiny.processingSystem(class "ItemDragSystem")
+MouseDragSystem = tiny.processingSystem(class "MouseDragSystem")
 
-function ItemDragSystem:init(mouse)
+function MouseDragSystem:init(mouse)
     self.filter = function (_, e)
       return e.events and e.events.mousepressed ~= nil
     end
     self.mouse = mouse
 end
 
-function ItemDragSystem:process(e, dt)
+function MouseDragSystem:process(e, dt)
   if e.events.mousepressed then
     local mx, my, button = unpack(e.events.mousepressed)
     if button == 1 then
       e.events.mousepressed = false
       e.body:setType("dynamic")
       if e.name == "Cell" and e.parent then
-        e.parent:detachCell(e)
+        table.insert(e.parent.events.removecell, e)
       end
       self.mouse:attach(e.body)
     end

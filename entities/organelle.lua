@@ -11,10 +11,6 @@ function Organelle:init(x, y, points)
   systemWorld:addEntity(self)
 end
 
-function Organelle:detach() 
-
-end
-
 Organelle.drawLayer = 3
 function Organelle:draw()
   love.graphics.setColor(unpack(self.color))

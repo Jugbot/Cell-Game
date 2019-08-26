@@ -11,8 +11,8 @@ function AddItemSystem:process(e, dt) -- TODO
   if e.events.dropped then
     local slot = e.events.availableslot
     if slot then
-      -- slot.events.additem = e
-      slot:attach(e)
+      slot.events.additem = e
+      -- slot:attach(e)
     end
     e.events.dropped = false
   end

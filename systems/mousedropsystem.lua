@@ -1,12 +1,12 @@
-ItemDropSystem = tiny.processingSystem(class "ItemDropSystem")
+MouseDropSystem = tiny.processingSystem(class "MouseDropSystem")
 
-function ItemDropSystem:init()
+function MouseDropSystem:init()
   self.filter = function (_, e)
     return e.name == "Mouse" 
   end
 end
 
-function ItemDropSystem:process(e, dt)
+function MouseDropSystem:process(e, dt)
   if e.attached then
     if not love.mouse.isDown(1) then
       e.attached.body:setType("static")

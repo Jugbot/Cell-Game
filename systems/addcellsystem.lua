@@ -9,6 +9,6 @@ end
 
 function AddCellSystem:process(e, dt)
   if not e.events.grabbed and not e.parent then
-    self.player.organism:attachCell(e)
+    table.insert(self.player.organism.events.addcell, e)
   end
 end

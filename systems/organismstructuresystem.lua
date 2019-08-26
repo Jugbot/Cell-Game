@@ -1,19 +1,19 @@
-CellStructureEventSystem = tiny.processingSystem(class "CellStructureEventSystem")
+OrganismStructureSystem = tiny.processingSystem(class "OrganismStructureSystem")
 
-function CellStructureEventSystem:init()
+function OrganismStructureSystem:init()
   self.filter = function (_, e)
     return e.name == "Organism"
   end
 end
 
-function CellStructureEventSystem:onAdd(e)
+function OrganismStructureSystem:onAdd(e)
   e.events.addcell = {} -- array of events
   e.events.removecell = {}
   e.events.additem = {}
   e.events.removeitem = {}
 end
 
-function CellStructureEventSystem:process(organism, dt)
+function OrganismStructureSystem:process(organism, dt)
   -- ADD CELL
   for i, cell in ipairs(organism.events.addcell) do
     assert(cell:instanceOf(Cell), "tried to attach non-cell to organism!")
@@ -51,12 +51,12 @@ function CellStructureEventSystem:process(organism, dt)
       end
     end
     assert(cell:instanceOf(Cell), "tried to detach non-cell from organism!")
-    assert(self.cells[cell], "Tried to detach unowned cell!")
+    assert(organism.cells[cell], "Tried to detach unowned cell!")
     for _, j in ipairs(cell.body:getJoints()) do
       if j:getUserData() == cell.parent then j:destroy() end
     end
     cell.parent = nil
-    self:_removeCell(cell)
+    organism:_removeCell(cell)
   end
   organism.events.removecell = {}
 

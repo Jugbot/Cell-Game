@@ -7,6 +7,7 @@ function Organism:init()
   self.cells = {}
   self.cellsData = love.image.newImageData(1024, 1, "rgba16f")
   self.cellsDataImage = love.graphics.newImage(self.cellsData)
+  self.events = {}
   systemWorld:addEntity(self)
 end
 
@@ -43,35 +44,35 @@ function Organism:_removeCell(cell)
   print('detach', self.cellsCount)
 end
 
-function Organism:attachCell(cell)
-  assert(cell:instanceOf(Cell), "tried to attach non-cell to organism!")
-  local cells = self.cells
-  if self.cellsCount == 0 then
-    self:_addCell(cell)
-    return true
-  end
-  local success = false
-  for other, _ in pairs(cells) do
-    local dist = love.physics.getDistance(other.fixture, cell.fixture)
-    local b1, b2 = other.body, cell.body
-    if dist < 5 and dist >= 0 and b1 ~= b2 then
-      local j = love.physics.newDistanceJoint(b1, b2, b1:getX(), b1:getY(), b2:getX(), b2:getY(), false)
-      j:setUserData(self)
-      success = true
-    end
-  end
-  if success then
-    self:_addCell(cell)
-  end
-  return success
-end
+-- function Organism:attachCell(cell)
+--   assert(cell:instanceOf(Cell), "tried to attach non-cell to organism!")
+--   local cells = self.cells
+--   if self.cellsCount == 0 then
+--     self:_addCell(cell)
+--     return true
+--   end
+--   local success = false
+--   for other, _ in pairs(cells) do
+--     local dist = love.physics.getDistance(other.fixture, cell.fixture)
+--     local b1, b2 = other.body, cell.body
+--     if dist < 5 and dist >= 0 and b1 ~= b2 then
+--       local j = love.physics.newDistanceJoint(b1, b2, b1:getX(), b1:getY(), b2:getX(), b2:getY(), false)
+--       j:setUserData(self)
+--       success = true
+--     end
+--   end
+--   if success then
+--     self:_addCell(cell)
+--   end
+--   return success
+-- end
 
-function Organism:detachCell(cell)
-  assert(cell:instanceOf(Cell), "tried to detach non-cell from organism!")
-  assert(self.cells[cell], "Tried to detach unowned cell!")
-  for _, j in ipairs(cell.body:getJoints()) do
-    if j:getUserData() == cell.parent then j:destroy() end
-  end
-  cell.parent = nil
-  self:_removeCell(cell)
-end
+-- function Organism:detachCell(cell)
+--   assert(cell:instanceOf(Cell), "tried to detach non-cell from organism!")
+--   assert(self.cells[cell], "Tried to detach unowned cell!")
+--   for _, j in ipairs(cell.body:getJoints()) do
+--     if j:getUserData() == cell.parent then j:destroy() end
+--   end
+--   cell.parent = nil
+--   self:_removeCell(cell)
+-- end
