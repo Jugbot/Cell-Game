@@ -11,8 +11,7 @@ function ItemDragSystem:process(e, dt)
   if e.events.mousepressed then
     local mx, my, button = unpack(e.events.mousepressed)
     if button == 1 then
-      e.events.mousepressed = nil
-      e.events.grabbed = true
+      e.events.mousepressed = false
       e.body:setType("dynamic")
       if e.name == "Cell" and e.parent then
         e.parent:detachCell(e)

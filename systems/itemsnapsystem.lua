@@ -32,7 +32,7 @@ function ItemSnapSystem:process(e, dt)
       for slot, _ in pairs(cell.slots) do
         local x2, y2 = slot:getPosition()
         local dist = vector.dist2(x,y,x2,y2)
-        if dist < slot.radius * slot.radius and (closest == false or dist < closest) and slot:canFit(item) then
+        if dist < slot.radius * slot.radius and (closest == false or dist < closest) and slot:canAttach(item) then
           chosen = slot 
           closest = dist
         end
@@ -40,13 +40,15 @@ function ItemSnapSystem:process(e, dt)
     end
 
     if chosen ~= false then
-      chosen:attach(item)
-      -- item.body:setType("static")
       item.body:setPosition(chosen:getPosition())
+      item.events.availableslot = chosen
+      -- chosen:attach(item)
+      -- item.body:setType("dynamic")
     else
-      if item.parent then
-        item.parent:detach()
-      end
+      item.events.slot = false
+      -- if item.parent then
+      --   item.parent:detach()
+      -- end
       -- item.body:setType("dynamic")
     end
   end

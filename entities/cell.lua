@@ -80,19 +80,6 @@ function Cell:draw()
   end
 end
 
--- Removes joints owned by parent (ie: cell-cell joints)
-function Cell:_detachParent()
-  for _, j in ipairs(self.body:getJoints()) do
-    if j:getUserData() == self.parent then j:destroy() end
-  end
-  self.parent = nil
-end
-
-function Cell:destroy()
-  self.fixture:destroy()
-  self.body:destroy()
-end
-
 function Cell:debug()
   love.graphics.setColor(1,0,0)
   love.graphics.circle("line", self.body:getX(), self.body:getY(), self.shape:getRadius())

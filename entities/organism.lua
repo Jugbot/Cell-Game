@@ -36,7 +36,6 @@ function Organism:_addCell(cell)
 end
 
 function Organism:_removeCell(cell)
-  cell:_detachParent()
   self.cells[cell] = nil
   self.cellsCount = self.cellsCount - 1
   cell.parent = nil
@@ -70,5 +69,9 @@ end
 function Organism:detachCell(cell)
   assert(cell:instanceOf(Cell), "tried to detach non-cell from organism!")
   assert(self.cells[cell], "Tried to detach unowned cell!")
+  for _, j in ipairs(cell.body:getJoints()) do
+    if j:getUserData() == cell.parent then j:destroy() end
+  end
+  cell.parent = nil
   self:_removeCell(cell)
 end

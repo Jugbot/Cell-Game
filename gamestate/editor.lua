@@ -20,7 +20,8 @@ function editor:init()
   editorSystems.itemSnapSystem = ItemSnapSystem()
   editorSystems.itemDragSystem = ItemDragSystem(mouse)
   editorSystems.integritySystem = IntegritySystem()
-  editorSystems.cellBuildSystem = CellBuildSystem(player)
+  editorSystems.addCellSystem = AddCellSystem(player)
+  editorSystems.addItemSystem = AddItemSystem()
   editorSystems.drawSystem = DrawSystem(camera)
   editorSystems.drawSlotSystem = DrawSlotSystem(mouse)
   -- add all the systems
@@ -56,6 +57,7 @@ function getObjUnderMouse(mx, my)
   physicsWorld:queryBoundingBox( x, y, x, y, function (fixture)
     newobj = fixture:getUserData()
     if newobj and fixture:testPoint(x,y) then
+      -- if newobj.Item then return newobj end -- removeme
       if (newobj.drawLayer == nil or index == nil or index < newobj.drawLayer) and newobj.events then 
         obj = newobj
         index = obj.drawLayer
@@ -86,18 +88,14 @@ function editor:itemselect(id)
   if id == "small_cell" then
     local cell = Cell(x, y, 0)
     cell.events.mousepressed = {x, y, 1}
-    cell.body:setType("static")
   elseif id == "medium_cell" then
     local cell = Cell(x, y, 1)
     cell.events.mousepressed = {x, y, 1}
-    cell.body:setType("static")
   elseif id == "large_cell" then
     local cell = Cell(x, y, 2)
     cell.events.mousepressed = {x, y, 1}
-    cell.body:setType("static")
   elseif id == "core" then
     local core = Core(x, y)
     core.events.mousepressed = {x, y, 1}
-    core.body:setType("static")
   end
 end
