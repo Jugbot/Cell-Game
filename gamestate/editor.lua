@@ -15,21 +15,29 @@ function editor:init()
   local mouse = Mouse()
   local player = Player(Organism())
   -- systems (game logic)
-  editorSystems.mouseJointSystem = MouseJointSystem()
-  editorSystems.mouseDragSystem = MouseDragSystem(mouse)
-  editorSystems.mouseDropSystem = MouseDropSystem()
-  editorSystems.itemSnapSystem = ItemSnapSystem()
+  editorSystems.mouseJointSystem        = MouseJointSystem()
+  editorSystems.mouseDragSystem         = MouseDragSystem(mouse)
+  editorSystems.mouseDropSystem         = MouseDropSystem()
+  editorSystems.itemSnapSystem          = ItemSnapSystem()
   editorSystems.organismIntegritySystem = OrganismIntegritySystem()
-  editorSystems.addCellSystem = AddCellSystem(player)
-  editorSystems.addItemSystem = AddItemSystem()
-  editorSystems.drawSystem = DrawSystem(camera)
-  editorSystems.drawSlotSystem = DrawSlotSystem(mouse)
+  editorSystems.addCellSystem           = AddCellSystem(player)
+  editorSystems.addItemSystem           = AddItemSystem()
+  editorSystems.drawSystem              = DrawSystem(camera)
+  editorSystems.drawSlotSystem          = DrawSlotSystem(mouse)
   editorSystems.organismStructureSystem = OrganismStructureSystem()
-  editorSystems.slotStructureSystem = SlotStructureSystem()
-  -- add all the systems
-  for _, system in pairs(editorSystems) do
-    systemWorld:addSystem(system)
-  end
+  editorSystems.slotStructureSystem     = SlotStructureSystem()
+  -- add all the systems (in order of execution)
+  systemWorld:addSystem(editorSystems.mouseJointSystem        )
+  systemWorld:addSystem(editorSystems.mouseDragSystem         )
+  systemWorld:addSystem(editorSystems.mouseDropSystem         )
+  systemWorld:addSystem(editorSystems.itemSnapSystem          )
+  systemWorld:addSystem(editorSystems.organismIntegritySystem )
+  systemWorld:addSystem(editorSystems.addCellSystem           )
+  systemWorld:addSystem(editorSystems.addItemSystem           )
+  systemWorld:addSystem(editorSystems.drawSystem              )
+  systemWorld:addSystem(editorSystems.drawSlotSystem          )
+  systemWorld:addSystem(editorSystems.organismStructureSystem )
+  systemWorld:addSystem(editorSystems.slotStructureSystem     )
 end
 
 function editor:enter()
@@ -37,6 +45,7 @@ function editor:enter()
   physicsWorld = editorPhysicsWorld
   systemWorld = editorSystemWorld
   love.graphics.setBackgroundColor(220/256.0, 226/256.0, 200/256.0)
+  Core.drawLayer = 6
   editorGUI.layout:show()
 end
 
@@ -45,7 +54,7 @@ function editor:update(dt)
   systemWorld:update(dt, tiny.rejectAll('DrawSystem'))
 end
 
-function editor:draw()
+function editor:draw(dt)
   camera:attach()
   systemWorld:update(dt, tiny.requireAll('DrawSystem'))
   camera:detach()
@@ -99,5 +108,8 @@ function editor:itemselect(id)
   elseif id == "core" then
     local core = Core(x, y)
     core.events.mousepressed = {x, y, 1}
+  elseif id == "small_turret" then
+    local turret = Turret(x, y)
+    turret.events.mousepressed = {x, y, 1}
   end
 end

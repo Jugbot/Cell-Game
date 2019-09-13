@@ -30,10 +30,11 @@ function Organism:draw()
 end
 
 function Organism:_addCell(cell)
+  assert(not self.cells[cell], "Cell already added!")
   self.cells[cell] = true
   self.cellsCount = self.cellsCount + 1
   cell.parent = self
-  print('attach', self.cellsCount)
+  print('attach', cell)
 end
 
 function Organism:_removeCell(cell)

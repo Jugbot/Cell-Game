@@ -19,6 +19,7 @@ physicsWorld = true
 systemWorld = true
 
 function love.load()
+  print(_VERSION)
   love.graphics.setFont(mainFont)
   Gamestate.registerEvents()
   Gamestate.switch(editor)

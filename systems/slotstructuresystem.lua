@@ -11,7 +11,7 @@ function SlotStructureSystem:process(slot, dt)
   local item = slot.events.additem
   if item then
     assert(slot:canAttach(item), "Tried to fit invalid item to slot")
-    if joint then return end
+    if slot.joint then return end
     local x, y = slot:getPosition()
     slot.joint = love.physics.newWeldJoint(slot.cell.body, item.body, 0,0, false)
     slot.joint:setUserData(slot)

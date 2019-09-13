@@ -46,15 +46,11 @@ function Cell:_addSlots()
     local angle = 0
     for i2=1, count do 
       local x, y = math.sin(angle) * distance, math.cos(angle) * distance
-      -- print(x,y)
       local s = Slot(self, x, y, size, "secondary")
-      -- local j = love.physics.newWeldJoint(s.body, self.body, x, y)
-      -- j:setUserData(self)
       self.slots[s] = true
       angle = angle + math.pi * 2 / count
     end
     distance = distance + self.radius / #pattern[self.size+1]
-    print(size, distance)
   end
 end
 

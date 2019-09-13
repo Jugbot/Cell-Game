@@ -5,16 +5,16 @@ function OrganismIntegritySystem:init()
 end
 
 local function dfs(currentBody, visited)
-  if currentBody:isDestroyed() then return end
+  if not currentBody or currentBody:isDestroyed() then return end
   local owner = currentBody:getUserData()
-  if visited[owner] then return end 
+  if not owner or not owner.Cell or visited[owner] then return end 
   visited[owner] = true
   local joints = currentBody:getJoints()
-  for j=1, #joints do
-    if not joints[j]:isDestroyed() and joints[j]:getUserData() == self then
-    local b1, b2 = joints[j]:getBodies()
-    dfs(b1, visited)
-    dfs(b2, visited)
+  for _, joint in ipairs(joints) do
+    if not joint:isDestroyed() then
+      local b1, b2 = joint:getBodies()
+      dfs(b1, visited)
+      dfs(b2, visited)
     end
   end
 end
@@ -23,19 +23,25 @@ function OrganismIntegritySystem:process(e, dt)
   if e.dirty and e.cellsCount > 0 then
     print("integrity check")
     local cells = e.cells
-    -- if e.core then 
-    --   local currentBody = e.core.body
-    --   e.core.visited = true
-    --   dfs(currentBody, e.cells)
-    -- end
-    local first = next(cells).body
+    local first
     local visited = {}
+    if e.core then
+      first = e.core.body
+    else
+      first = next(cells).body
+    end
     dfs(first, visited)
     for cell, _ in pairs(cells) do
       if not visited[cell] then
         table.insert(e.events.removecell, cell)
       end
     end
+    -- debug
+    print(e)
+    for cell, _ in pairs(visited) do
+      print("\t",cell)
+    end
+    --
     e.dirty = false
   end
 end

@@ -18,7 +18,8 @@ function EditorGUI:init()
       "Large Cell"
     },
     {
-      name="Offense"
+      name="Offense",
+      "Small Turret"
     },
     {
       name="Defense"
